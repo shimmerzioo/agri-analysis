@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地图 - 农产品数据分析</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.css">
+    <style>
+        .map-container {
+            height: 600px;
+            margin-bottom: 20px;
+        }
+        .filter-panel {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">农产品数据分析</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">仪表盘</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/analysis">分析</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/map">地图</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/explore">数据探索</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/assistant">智能助手</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h1>全球农产品数据地图</h1>
+        <p class="lead">查看全球农产品数据的地理分布</p>
+
+        <div class="filter-panel">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="commodity-select" class="form-label">商品</label>
+                        <select class="form-select" id="commodity-select">
+                            <option value="">选择商品...</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="element-select" class="form-label">指标</label>
+                        <select class="form-select" id="element-select">
+                            <option value="">选择指标...</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="year-select" class="form-label">年份</label>
+                        <select class="form-select" id="year-select">
+                            <option value="">选择年份...</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn btn-primary" id="update-map-btn">更新地图</button>
+                    <button class="btn btn-secondary" id="reset-map-btn">重置筛选</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="map-container" id="world-map"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">数据表格</div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="map-data-table">
+                                <thead>
+                                    <tr>
+                                        <th>国家/地区</th>
+                                        <th>商品</th>
+                                        <th>指标</th>
+                                        <th>年份</th>
+                                        <th>值</th>
+                                        <th>单位</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="6" class="text-center">请选择筛选条件并点击"更新地图"</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.2/map/js/world.js"></script>
+    <script>
+        // 初始化地图
+        const worldMap = echarts.init(document.getElementById('world-map'));
+        
+        // 国家名称映射（将AMIS数据中的国家名称映射到ECharts世界地图中的国家名称）
+        const countryMapping = {
+            'United States of America': 'United States',
+            'United Kingdom': 'United Kingdom',
+            'Russian Federation': 'Russia',
+            'Korea, Republic of': 'South Korea',
+            'China, mainland': 'China',
+            'Viet Nam': 'Vietnam',
+            // 可以根据需要添加更多映射
+        };
+        
+        // 页面加载完成后初始化
+        $(document).ready(function() {
+            // 加载元数据
+            $.get('/api/metadata/', function(response) {
+                // 填充商品下拉框
+                const commoditySelect = $('#commodity-select');
+                commoditySelect.empty();
+                commoditySelect.append('<option value="">选择商品...</option>');
+                response.commodities.forEach(commodity => {
+                    commoditySelect.append(`<option value="${commodity}">${commodity}</option>`);
+                });
+                
+                // 填充指标下拉框
+                const elementSelect = $('#element-select');
+                elementSelect.empty();
+                elementSelect.append('<option value="">选择指标...</option>');
+                response.elements.forEach(element => {
+                    elementSelect.append(`<option value="${element}">${element}</option>`);
+                });
+                
+                // 填充年份下拉框
+                const yearSelect = $('#year-select');
+                yearSelect.empty();
+                yearSelect.append('<option value="">选择年份...</option>');
+                response.years.forEach(year => {
+                    yearSelect.append(`<option value="${year}">${year}</option>`);
+                });
+            });
+            
+            // 更新地图按钮点击事件
+            $('#update-map-btn').click(function() {
+                updateMap();
+            });
+            
+            // 重置地图按钮点击事件
+            $('#reset-map-btn').click(function() {
+                resetMap();
+            });
+            
+            // 初始化地图
+            initMap();
+        });
+        
+        // 初始化地图
+        function initMap() {
+            const option = {
+                title: {
+                    text: '全球农产品数据地图',
+                    subtext: '请选择筛选条件',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{b}: 暂无数据'
+                },
+                visualMap: {
+                    min: 0,
+                    max: 100,
+                    text: ['高', '低'],
+                    realtime: false,
+                    calculable: true,
+                    inRange: {
+                        color: ['lightskyblue', 'yellow', 'orangered']
+                    }
+                },
+                series: [
+                    {
+                        name: '全球农产品数据',
+                        type: 'map',
+                        map: 'world',
+                        roam: true,
+                        emphasis: {
+                            label: {
+                                show: true
+                            }
+                        },
+                        data: []
+                    }
+                ]
+            };
+            
+            worldMap.setOption(option);
+        }
+        
+        // 更新地图
+        function updateMap() {
+            const commodity = $('#commodity-select').val();
+            const element = $('#element-select').val();
+            const year = $('#year-select').val();
+            
+            // 验证输入
+            if (!commodity) {
+                alert('请选择一个商品');
+                return;
+            }
+            
+            if (!element) {
+                alert('请选择一个指标');
+                return;
+            }
+            
+            if (!year) {
+                alert('请选择一个年份');
+                return;
+            }
+            
+            // 构建请求参数
+            const params = {
+                commodity: commodity,
+                element: element,
+                year: year
+            };
+            
+            // 显示加载中
+            $('#map-data-table tbody').html('<tr><td colspan="6" class="text-center">加载中...</td></tr>');
+            
+            // 发送请求
+            $.ajax({
+                url: '/api/map-data/',
+                type: 'GET',
+                data: params,
+                success: function(response) {
+                    if (response.error) {
+                        alert('获取地图数据失败: ' + response.error);
+                        return;
+                    }
+                    
+                    // 更新表格
+                    updateTable(response.data);
+                    
+                    // 更新地图
+                    updateMapData(response.data, response.unit);
+                },
+                error: function(xhr, status, error) {
+                    alert('请求失败: ' + error);
+                }
+            });
+        }
+        
+        // 更新表格
+        function updateTable(data) {
+            let tableHtml = '';
+            
+            if (data.length === 0) {
+                tableHtml = '<tr><td colspan="6" class="text-center">没有找到符合条件的数据</td></tr>';
+            } else {
+                data.forEach(row => {
+                    tableHtml += `
+                        <tr>
+                            <td>${row.country}</td>
+                            <td>${row.commodity}</td>
+                            <td>${row.element}</td>
+                            <td>${row.year}</td>
+                            <td>${row.value.toLocaleString()}</td>
+                            <td>${row.unit}</td>
+                        </tr>
+                    `;
+                });
+            }
+            
+            $('#map-data-table tbody').html(tableHtml);
+        }
+        
+        // 更新地图数据
+        function updateMapData(data, unit) {
+            // 准备地图数据
+            const mapData = [];
+            let min = Infinity;
+            let max = -Infinity;
+            
+            data.forEach(row => {
+                // 获取映射后的国家名称
+                const mappedCountry = countryMapping[row.country] || row.country;
+                
+                mapData.push({
+                    name: mappedCountry,
+                    value: row.value,
+                    originName: row.country
+                });
+                
+                // 更新最大最小值
+                if (row.value < min) min = row.value;
+                if (row.value > max) max = row.value;
+            });
+            
+            // 设置地图选项
+            const option = {
+                title: {
+                    text: `${data[0].commodity} ${data[0].element}全球分布`,
+                    subtext: `${data[0].year}年 (单位: ${unit})`,
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: function(params) {
+                        const data = params.data;
+                        if (data && data.value !== undefined) {
+                            return `${data.originName || data.name}: ${data.value.toLocaleString()} ${unit}`;
+                        } else {
+                            return `${params.name}: 暂无数据`;
+                        }
+                    }
+                },
+                visualMap: {
+                    min: min,
+                    max: max,
+                    text: ['高', '低'],
+                    realtime: false,
+                    calculable: true,
+                    inRange: {
+                        color: ['lightskyblue', 'yellow', 'orangered']
+                    }
+                },
+                series: [
+                    {
+                        name: `${data[0].commodity} ${data[0].element}`,
+                        type: 'map',
+                        map: 'world',
+                        roam: true,
+                        emphasis: {
+                            label: {
+                                show: true
+                            }
+                        },
+                        data: mapData
+                    }
+                ]
+            };
+            
+            worldMap.setOption(option);
+        }
+        
+        // 重置地图
+        function resetMap() {
+            $('#commodity-select').val('');
+            $('#element-select').val('');
+            $('#year-select').val('');
+            
+            // 清空表格
+            $('#map-data-table tbody').html('<tr><td colspan="6" class="text-center">请选择筛选条件并点击"更新地图"</td></tr>');
+            
+            // 重置地图
+            initMap();
+        }
+        
+        // 窗口大小变化时调整地图大小
+        window.addEventListener('resize', function() {
+            worldMap.resize();
+        });
+    </script>
+</body>
+</html>
