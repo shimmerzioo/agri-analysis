@@ -24,7 +24,6 @@ for path in possible_paths:
 if csv_path is None:
     raise FileNotFoundError(f"找不到AMIS-2025.csv文件，请确保文件位于以下路径之一: {possible_paths}")
 
-print(f"加载数据文件: {csv_path}")
 df = pd.read_csv(csv_path)
 
 # 重命名列以便于处理
@@ -41,10 +40,6 @@ df.rename(columns={
 # 处理年份数据，从"2000/01"格式转换为"2000"
 df['year'] = df['year'].str.split('/').str[0].astype(int)
 
-# 检查数据中的唯一值
-print(f"数据中的商品类型: {df['commodity'].unique()}")
-print(f"数据中的指标类型: {df['element'].unique()}")
-print(f"数据中的国家/地区数量: {len(df['country'].unique())}")
 
 # 添加数据验证函数
 def validate_data_combination(country, commodity, element):
@@ -92,28 +87,6 @@ print(f"已创建有效数据组合查找表")
 @app.route('/')
 def index():
     return render_template('index.html')
-
-@app.route('/dashboard')
-def dashboard():
-    # 获取基本统计信息用于仪表盘
-    dashboard_stats = {
-        'total_records': len(df),
-        'countries_count': len(df['country'].unique()),
-        'commodities_count': len(df['commodity'].unique()),
-        'elements_count': len(df['element'].unique()),
-        'year_range': [int(df['year'].min()), int(df['year'].max())],
-        'top_commodities': df['commodity'].value_counts().head(5).to_dict(),
-        'top_elements': df['element'].value_counts().head(5).to_dict()
-    }
-    
-    # 计算数据完整性
-    missing_values = df.isnull().sum().sum()
-    total_values = df.size
-    data_completeness = (1 - missing_values / total_values) * 100
-    
-    dashboard_stats['data_completeness'] = round(data_completeness, 2)
-    
-    return render_template('dashboard.html', stats=dashboard_stats)
 
 @app.route('/analysis')
 def analysis():
