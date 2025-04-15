@@ -4,3 +4,5 @@ numpy==1.21.2
 scikit-learn==1.0
 requests==2.26.0
 python-dotenv==0.19.1
+setuptools>=68.2.2
+six>=1.16.0
