@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全球农产品数据分析系统</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- 自定义样式 -->
+    <link href="static/css/style.css" rel="stylesheet">
+    
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-leaf me-2"></i>农业数据分析平台
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/"><i class="fas fa-home me-1"></i> 首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/analysis"><i class="fas fa-chart-bar me-1"></i> 数据分析</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/map"><i class="fas fa-map-marked-alt me-1"></i> 地图</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主内容区 -->
+    <div class="container mt-4 mb-4">
+        
+<div class="row">
+    <div class="col-md-12 text-center mb-4">
+        <h1>全球农产品数据分析系统</h1>
+        <p class="lead">探索全球农产品数据，发现市场趋势，助力农业决策</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-chart-line"></i> 数据仪表盘</h5>
+                <p class="card-text">全球农产品数据概览，包括产量、价格、进出口等关键指标</p>
+                <a href="/dashboard" class="btn btn-primary">查看仪表盘</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-microscope"></i> 数据分析</h5>
+                <p class="card-text">使用聚类分析、相关性分析等方法，深入挖掘农产品数据背后的规律和关联</p>
+                <a href="/analysis" class="btn btn-primary">开始分析</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-map-marked-alt"></i> 地图可视化</h5>
+                <p class="card-text">在世界地图上直观展示各国农产品数据，支持多种指标和时间维度的切换</p>
+                <a href="/map" class="btn btn-primary">查看地图</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-robot"></i> 智能助手</h5>
+                <p class="card-text">基于豆包API的智能助手，为您解答农业相关问题，提供专业分析和建议</p>
+                <a href="/assistant" class="btn btn-primary">咨询助手</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                系统概览
+            </div>
+            <div class="card-body">
+                <p>全球农产品数据分析系统是一个综合性的农业数据分析平台，旨在帮助农业从业者、研究人员和政策制定者更好地理解全球农产品市场的动态变化。</p>
+                <p>系统主要功能包括：</p>
+                <ul>
+                    <li>数据仪表盘：展示全球农产品的产量、价格、进出口等关键指标</li>
+                    <li>数据分析：使用聚类分析、相关性分析等方法，挖掘数据背后的规律和关联</li>
+                    <li>地图可视化：在世界地图上直观展示各国农产品数据</li>
+                    <li>智能助手：基于豆包API的智能助手，解答农业相关问题</li>
+                </ul>
+                <p>通过这些功能，用户可以全面了解全球农产品市场的现状和趋势，为农业生产、贸易和投资决策提供数据支持。</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="bg-light py-3 mt-5">
+        <div class="container text-center">
+            <p class="mb-0">© 2025 全球农产品数据分析系统 | 基于Python和Flask构建</p>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- ECharts -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"></script>
+    <!-- 自定义JS -->
+    <script src="static/js/main.js"></script>
+    
+<script>
+    // 初始化概览图表
+    $(document).ready(function() {
+        // 创建ECharts实例
+        var overviewChart = echarts.init(document.getElementById('overview-chart'));
+        
+        // 加载数据
+        $.ajax({
+            url: '/api/metadata/',
+            type: 'GET',
+            success: function(response) {
+                // 显示加载中
+                overviewChart.showLoading();
+                
+                // 获取国家和商品数量
+                var countriesCount = response.countries.length;
+                var commoditiesCount = response.commodities.length;
+                var elementsCount = response.elements.length;
+                var seasonsCount = response.seasons.length;
+                
+                // 设置图表选项
+                var option = {
+                    title: {
+                        text: '数据概览',
+                        left: 'center'
+                    },
+                    tooltip: {
+                        trigger: 'item'
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        left: 'left'
+                    },
+                    series: [
+                        {
+                            name: '数据统计',
+                            type: 'pie',
+                            radius: '50%',
+                            data: [
+                                { value: countriesCount, name: '国家/地区数量' },
+                                { value: commoditiesCount, name: '商品种类数量' },
+                                { value: elementsCount, name: '指标数量' },
+                                { value: seasonsCount, name: '季节数量' }
+                            ],
+                            emphasis: {
+                                itemStyle: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            }
+                        }
+                    ]
+                };
+                
+                // 设置图表选项并渲染
+                overviewChart.hideLoading();
+                overviewChart.setOption(option);
+                
+                // 窗口大小变化时，重新调整图表大小
+                window.addEventListener('resize', function() {
+                    overviewChart.resize();
+                });
+            },
+            error: function(error) {
+                console.error('获取数据失败:', error);
+                $('#overview-chart').html('<div class="alert alert-danger">获取数据失败</div>');
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
