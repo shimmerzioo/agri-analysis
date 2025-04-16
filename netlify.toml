@@ -1,8 +1,10 @@
 [build]
   publish = "build"
-  command = "python build.py"
+  command = "pip install -r requirements.txt && python build.py"
 
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+  force = false
+  conditions = {Language = ["zh"]}
