@@ -727,3 +727,27 @@ def get_dashboard_data():
         },
         'commodity_trends': commodity_trends
     })
+
+# 添加以下代码到您的app.py文件中
+# 确保API路由在静态生成时能够提供模拟数据
+
+@app.route('/api/metadata/')
+def metadata_api():
+    # 提供静态元数据
+    return {
+        'commodities': ['小麦', '玉米', '大豆'],
+        'elements': ['产量', '进口量', '出口量'],
+        'years': ['2020', '2021', '2022']
+    }
+
+@app.route('/api/map-data/')
+def map_data_api():
+    # 提供静态地图数据
+    return {
+        'data': [
+            {'country': 'China', 'commodity': '小麦', 'element': '产量', 'year': '2022', 'value': '1000', 'unit': '吨'},
+            {'country': 'United States', 'commodity': '小麦', 'element': '产量', 'year': '2022', 'value': '800', 'unit': '吨'},
+            # 添加更多静态数据
+        ],
+        'unit': '吨'
+    }
