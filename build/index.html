@@ -16,7 +16,7 @@
     <!-- 导航栏 -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="/">
+            <a class="navbar-brand" href="index.html">
                 <i class="fas fa-leaf me-2"></i>农业数据分析平台
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,13 +25,10 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/"><i class="fas fa-home me-1"></i> 首页</a>
+                        <a class="nav-link active" href="index.html"><i class="fas fa-home me-1"></i> 首页</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/analysis"><i class="fas fa-chart-bar me-1"></i> 数据分析</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/map"><i class="fas fa-map-marked-alt me-1"></i> 地图</a>
+                        <a class="nav-link" href="map.html"><i class="fas fa-map-marked-alt me-1"></i> 地图</a>
                     </li>
                 </ul>
             </div>
@@ -54,16 +51,7 @@
             <div class="card-body">
                 <h5 class="card-title"><i class="fas fa-chart-line"></i> 数据仪表盘</h5>
                 <p class="card-text">全球农产品数据概览，包括产量、价格、进出口等关键指标</p>
-                <a href="/dashboard" class="btn btn-primary">查看仪表盘</a>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6 mb-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <h5 class="card-title"><i class="fas fa-microscope"></i> 数据分析</h5>
-                <p class="card-text">使用聚类分析、相关性分析等方法，深入挖掘农产品数据背后的规律和关联</p>
-                <a href="/analysis" class="btn btn-primary">开始分析</a>
+                <a href="index.html" class="btn btn-primary">查看仪表盘</a>
             </div>
         </div>
     </div>
@@ -72,16 +60,7 @@
             <div class="card-body">
                 <h5 class="card-title"><i class="fas fa-map-marked-alt"></i> 地图可视化</h5>
                 <p class="card-text">在世界地图上直观展示各国农产品数据，支持多种指标和时间维度的切换</p>
-                <a href="/map" class="btn btn-primary">查看地图</a>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6 mb-4">
-        <div class="card h-100">
-            <div class="card-body">
-                <h5 class="card-title"><i class="fas fa-robot"></i> 智能助手</h5>
-                <p class="card-text">基于豆包API的智能助手，为您解答农业相关问题，提供专业分析和建议</p>
-                <a href="/assistant" class="btn btn-primary">咨询助手</a>
+                <a href="map.html" class="btn btn-primary">查看地图</a>
             </div>
         </div>
     </div>
@@ -98,9 +77,7 @@
                 <p>系统主要功能包括：</p>
                 <ul>
                     <li>数据仪表盘：展示全球农产品的产量、价格、进出口等关键指标</li>
-                    <li>数据分析：使用聚类分析、相关性分析等方法，挖掘数据背后的规律和关联</li>
                     <li>地图可视化：在世界地图上直观展示各国农产品数据</li>
-                    <li>智能助手：基于豆包API的智能助手，解答农业相关问题</li>
                 </ul>
                 <p>通过这些功能，用户可以全面了解全球农产品市场的现状和趋势，为农业生产、贸易和投资决策提供数据支持。</p>
             </div>
@@ -113,7 +90,7 @@
     <!-- 页脚 -->
     <footer class="bg-light py-3 mt-5">
         <div class="container text-center">
-            <p class="mb-0">© 2025 全球农产品数据分析系统 | 基于Python和Flask构建</p>
+            <p class="mb-0">© 2023 全球农产品数据分析系统 | 基于Python和Flask构建</p>
         </div>
     </footer>
 
@@ -129,72 +106,68 @@
 <script>
     // 初始化概览图表
     $(document).ready(function() {
-        // 创建ECharts实例
-        var overviewChart = echarts.init(document.getElementById('overview-chart'));
+        // 模拟数据（静态部署时使用）
+        const mockData = {
+            countries: ['中国', '美国', '巴西', '印度', '俄罗斯', '法国', '德国', '加拿大', '澳大利亚', '阿根廷'],
+            commodities: ['小麦', '玉米', '大豆', '水稻', '棉花', '咖啡', '糖', '牛肉', '猪肉', '鸡肉'],
+            elements: ['产量', '进口量', '出口量', '库存量', '价格'],
+            seasons: ['春季', '夏季', '秋季', '冬季']
+        };
         
-        // 加载数据
-        $.ajax({
-            url: '/api/metadata/',
-            type: 'GET',
-            success: function(response) {
-                // 显示加载中
-                overviewChart.showLoading();
-                
-                // 获取国家和商品数量
-                var countriesCount = response.countries.length;
-                var commoditiesCount = response.commodities.length;
-                var elementsCount = response.elements.length;
-                var seasonsCount = response.seasons.length;
-                
-                // 设置图表选项
-                var option = {
-                    title: {
-                        text: '数据概览',
-                        left: 'center'
-                    },
-                    tooltip: {
-                        trigger: 'item'
-                    },
-                    legend: {
-                        orient: 'vertical',
-                        left: 'left'
-                    },
-                    series: [
-                        {
-                            name: '数据统计',
-                            type: 'pie',
-                            radius: '50%',
-                            data: [
-                                { value: countriesCount, name: '国家/地区数量' },
-                                { value: commoditiesCount, name: '商品种类数量' },
-                                { value: elementsCount, name: '指标数量' },
-                                { value: seasonsCount, name: '季节数量' }
-                            ],
-                            emphasis: {
-                                itemStyle: {
-                                    shadowBlur: 10,
-                                    shadowOffsetX: 0,
-                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
-                                }
+        // 创建ECharts实例
+        var overviewChart = document.getElementById('overview-chart');
+        if (overviewChart) {
+            var chart = echarts.init(overviewChart);
+            
+            // 使用模拟数据
+            var countriesCount = mockData.countries.length;
+            var commoditiesCount = mockData.commodities.length;
+            var elementsCount = mockData.elements.length;
+            var seasonsCount = mockData.seasons.length;
+            
+            // 设置图表选项
+            var option = {
+                title: {
+                    text: '数据概览',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'item'
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'left'
+                },
+                series: [
+                    {
+                        name: '数据统计',
+                        type: 'pie',
+                        radius: '50%',
+                        data: [
+                            { value: countriesCount, name: '国家/地区数量' },
+                            { value: commoditiesCount, name: '商品种类数量' },
+                            { value: elementsCount, name: '指标数量' },
+                            { value: seasonsCount, name: '季节数量' }
+                        ],
+                        emphasis: {
+                            itemStyle: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
                             }
                         }
-                    ]
-                };
-                
-                // 设置图表选项并渲染
-                overviewChart.hideLoading();
-                overviewChart.setOption(option);
-                
-                // 窗口大小变化时，重新调整图表大小
-                window.addEventListener('resize', function() {
-                    overviewChart.resize();
-                });
-            },
-            error: function(error) {
-                console.error('获取数据失败:', error);
-                $('#overview-chart').html('<div class="alert alert-danger">获取数据失败</div>');
-            }
-        });
+                    }
+                ]
+            };
+            
+            // 设置图表选项并渲染
+            chart.setOption(option);
+            
+            // 窗口大小变化时，重新调整图表大小
+            window.addEventListener('resize', function() {
+                chart.resize();
+            });
+        }
     });
 </script>
 
